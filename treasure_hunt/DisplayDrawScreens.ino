@@ -3,9 +3,9 @@
 // functions to "draw" the different screens:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Start menu screens:
+// Start menu screens:
 
-void Display::drawFirstScreen(void) //welcome screen
+void Display::drawFirstScreen(void) // welcome screen
 {
   screen_index = 1;
   display.clearDisplay();
@@ -22,7 +22,7 @@ void Display::drawFirstScreen(void) //welcome screen
 }
 
 void Display::drawSecondScreen(void)
-{ //"Choose number of treasures" screen
+{                                      //"Choose number of treasures" screen
   screen_index = NUM_OF_TREASURES_SCR; // 2
   questionID = 2;
   display.clearDisplay();
@@ -55,19 +55,24 @@ void Display::drawFourthScreen(void)
   display.display();
 }
 
-// void Display::drawFifthScreen(void) { //"how much time?" screen
-//   screen_index = 5;
-//   questionID = 5;
-//   currentOption=1; //use sound as default
-//   display.clearDisplay();
-//   display.setTextSize(2);
-//   display.setTextColor(WHITE);
-//   printHorizontallyCentered("Set timer?", 20);
-//   delay(200);
-//   display.setTextSize(1);
-//   printHorizontallyCentered("Continue", 57);
-//   display.display();
-// }
+// CHECK should appear only if the answer to "shoud use timer" was yes
+void Display::drawFifthScreen(void)
+{ //"how much time?" screen
+  screen_index = HOW_MUCH_TIME_SCR;
+  questionID = 5;
+  currentOption = 2;
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  printHorizontallyCentered("How much", 1);
+  printHorizontallyCentered("time?", 19);
+  printHorizontallyCentered("(minutes)", 37);
+  display.display();
+  delay(200);
+  display.setTextSize(1);
+  printHorizontallyCentered("Continue", 57);
+  display.display();
+}
 
 void Display::drawSixthScreen(void)
 {                                      //"should we use sound?" screen
@@ -93,7 +98,7 @@ void Display::drawEndMenuScreen(void)
   display.setTextColor(WHITE);
   printHorizontallyCentered("Saved", 10);
   display.display();
-  delay(200);
+  // delay(200);
   display.setTextSize(1);
   printHorizontallyCentered("Press OK to start", 40);
   printHorizontallyCentered("Press UP to go back", 50);
@@ -101,39 +106,37 @@ void Display::drawEndMenuScreen(void)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//game screens
+// game screens
 
-
-
-void Display::drawMainGameScreen(int currentTreasure, int treasuresNumber, double dist, String time, bool closeEnough)
-{ //the main screen of the game. shows the distance, the time left and the current treasure
+void Display::drawMainGameScreen(int currentTreasure, int treasuresNumber, double dist, bool withTimer, String time, bool closeEnough)
+{ // the main screen of the game. shows the distance, the time left and the current treasure
   screen_index = MAIN_GAME_SCR;
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 3);
-  display.print("Treasure "+ String(currentTreasure) + "/" + String(treasuresNumber)); //print treasure number
+  display.print("Treasure " + String(currentTreasure) + "/" + String(treasuresNumber)); // print treasure number
 
-  display.setCursor(95, 3);
-  display.print(time); //print time left
-  
+  if (withTimer)
+  {
+    display.setCursor(95, 3);
+    display.print(time); // print time left
+  }
+
   display.setTextSize(3);
   display.setCursor(10, 27);
-  display.print(dist); //print current distance
+  display.print(dist); // print current distance
   display.display();
 
-  if(closeEnough){
+  if (closeEnough)
+  {
     closeEnoughAnimation();
-   }
-
+  }
 }
 
-
 void Display::drawTreasureFoundScreen(void)
-{                                      //"should we use sound?" screen
-  screen_index = TREASURE_FOUND_SCR; 
-  questionID = 6;
-  currentOption = 1; // use sound as default
+{ //"should we use sound?" screen
+  screen_index = TREASURE_FOUND_SCR;
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(WHITE);
@@ -141,8 +144,68 @@ void Display::drawTreasureFoundScreen(void)
   printHorizontallyCentered("Find next", 19);
   printHorizontallyCentered("treasure", 37);
 
-  
   display.setTextSize(1);
   printHorizontallyCentered("Continue", 57);
+  display.display();
+}
+
+void Display::drawTimeUpScreen(String scoreStr)
+{
+  screen_index = TIME_UP_SCR;
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  printHorizontallyCentered("Time's up!", 0);
+  printHorizontallyCentered("Score:", 18);
+  printHorizontallyCentered(scoreStr, 36);
+
+  // display.setTextSize(1);
+  // printHorizontallyCentered("Start again", 56); // CHECK implement this?
+  display.display();
+}
+
+void Display::drawWellDoneScreen()
+{
+  screen_index = WELL_DONE_SCR;
+  display.clearDisplay();
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  printHorizontallyCentered("Well Done!", 0);
+  display.setTextSize(1);
+  printHorizontallyCentered("Score:", 18);
+   display.setTextSize(2);
+  printHorizontallyCentered("100/100", 36);
+
+  wellDoneAnimation();
+  // display.setTextSize(1);
+  // printHorizontallyCentered("Start again", 56); // CHECK implement this?
+  display.display();
+}
+
+// searching wifi
+void Display::drawSearchingScreen()
+{
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 10);
+  display.println("Searching...");
+  display.display();
+}
+
+void Display::drawNotFoundScreen()
+{
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(WHITE);
+  display.setCursor(0, 10);
+  display.println("Treasure not found.");
+  display.println("Please Make sure it");
+  display.println("is connected to");
+  display.println("powerbank and within");
+  display.println("wifi range");
+  printHorizontallyCentered("Searching...", 55);
+
   display.display();
 }

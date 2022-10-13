@@ -14,13 +14,18 @@
 #define NUM_OF_TREASURES_SCR 2
 #define OPTIONS_SCR 3
 #define SHOULD_USE_TIMER_SCR 4
+#define HOW_MUCH_TIME_SCR 5
 #define SHOULD_USE_SOUND_SCR 6
 #define END_OF_MENU_SCR 20
 
 #define MAIN_GAME_SCR 21
 #define TREASURE_FOUND_SCR 22
+#define TIME_UP_SCR 23
+#define WELL_DONE_SCR 24
 
-
+#define TIMER_OPTION1 2
+#define TIMER_OPTION2 4
+#define TIMER_OPTION3 6
 
 extern int currentBtn1State; // variables to read buttons
 extern int currentBtn2State;
@@ -38,14 +43,14 @@ public:
   int currentOption; // in the start menu, we need to choose between a few options
                      // for a few parameters. This is the curren option
 
-  bool game_ready; //true if all game parameters are known, and we can start
+  bool game_ready; // true if all game parameters are known, and we can start
 
   //////////////////////////////////////////////////////////
   // parameters of the game, to be passed later
-  int treasuresNumber = 2; //CKECK delete this "=2"// number of active treasures in the game. can be 1 or 2 in this case
-  bool withTimer;      // is there timer or not? 1 if there is, 0 if not
-  // int timer = 0;           // time left for the game
-  bool withSound; // is there sound or not? 1 if there is, 0 if not
+  int treasuresNumber;     // number of active treasures in the game. can be 1 or 2 in this case
+  bool withTimer;          // is there timer or not? 1 if there is, 0 if not
+  int timerTimeForTheGame; // time left for the game
+  bool withSound = true;   // is there sound or not? 1 if there is, 0 if not
 
   Display();
   // start and manage the start-game menu
@@ -60,16 +65,25 @@ public:
   void drawSecondScreen(void);
   //"should we set a timer?" screen
   void drawFourthScreen(void);
-  // void drawFifthScreen(void) //CHECK
+  //"how much time" screen
+  void drawFifthScreen(void);
   //"should we use sound?" screen
   void drawSixthScreen(void);
   // choices accepted screen
   void drawEndMenuScreen(void);
 
-  //the main screen of the game. shows the distance, the time left and the current treasure
-  void drawMainGameScreen(int currentTreasure, int treasuresNumber, double dist, String time, bool closeEnough = false);
-  //screen of finding a tressure that is not the last one
+  // the main screen of the game. shows the distance, the time left and the current treasure
+  void drawMainGameScreen(int currentTreasure, int treasuresNumber, double dist, bool withTimer, String time, bool closeEnough = false);
+  // screen of finding a tressure that is not the last one
   void drawTreasureFoundScreen(void);
+  // screen to say that the time is up
+  void drawTimeUpScreen(String scoreStr);
+  // well done screen (after finfing all treasures)
+  void drawWellDoneScreen();
+  // searching wifi
+  void drawSearchingScreen();
+  // wifi not found screen
+  void drawNotFoundScreen();
   //////////////////////////////////////////
   // functions to draw and manage the screen of replacing and choosing options. Implementation at "DisplayManageOptionsScreen.ino"
 
@@ -99,9 +113,9 @@ public:
   void closeEnoughAnimation();
   ////////////////////////////////////////
   // helper function to print text centered horizontally at given dustance from top
-  void printHorizontallyCentered(char *str, int distanceFromTop); // CHECK make public
-  // writes text on the display, given the text and font-size (1-8)
-  void writeText(String txt, int size = 1); // CHECK make public
+  void printHorizontallyCentered(char *str, int distanceFromTop);  // CHECK make public
+  void printHorizontallyCentered(String str, int distanceFromTop); // CHECK same
+
 };
 
 Display::Display() : display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1),
@@ -123,17 +137,18 @@ void Display::startGameMenu(void)
   drawFirstScreen();
   while (!game_ready)
   {
+
     // CHECK maybe delete this
     //  if (digitalRead(OK_BTN) == LOW || digitalRead(UP_BTN)==LOW || digitalRead(DOWN_BTN)==LOW)
     //  {  //enable to continue with the menu only if no buttons are clicked.
     //     // To prevent leaving a button pressed and not realy choosing
+    //     delay(100);
     //   continue; //wait for the buttons to be released
 
     //  }
     interactiveScreen();
     delay(120); // to prevent "two choices" with one click
   }
-
 }
 void Display::interactiveScreen(void)
 {
@@ -141,10 +156,13 @@ void Display::interactiveScreen(void)
   if (screen_index == START_SCR)
   { // first "welcome" screen
     // read the state of the button:
+
     currentBtn1State = digitalRead(OK_BTN);
     if (currentBtn1State == LOW)
     { // continue to next screen
+
       removeFirstScreenAnimation();
+      delay(5);
       drawSecondScreen();
     }
   }
@@ -195,8 +213,19 @@ void Display::interactiveScreen(void)
     }
   }
   ///////////////////////////////////////////////////////////////////////////////////////////////////
+  else if (screen_index == HOW_MUCH_TIME_SCR)
+  { // Fifth screen, with instruction to choose time for the game
+    // read the state of the button:
+    currentBtn1State = digitalRead(OK_BTN);
+    if (currentBtn1State == LOW)
+    {                                     // if OK button was clicked
+      drawOptionScreenNum(TIMER_OPTION1); // go to choose an option
+    }
+  }
+  ///////////////////////////////////////////////////////////////////////////////////////////////////
   else if (screen_index == SHOULD_USE_SOUND_SCR)
   { //"should we use sound?" screen
+    delay(1000);
     currentBtn3State = digitalRead(OK_BTN);
     if (currentBtn3State == LOW)
     { // if OK button was clicked
@@ -213,7 +242,7 @@ void Display::interactiveScreen(void)
       game_ready = true;
     }
     else if (digitalRead(UP_BTN) == LOW)
-    { //up button was clicked - start the menu again
+    { // up button was clicked - start the menu again
       drawFirstScreen();
     }
   }
@@ -230,17 +259,17 @@ void Display::printHorizontallyCentered(char *str, int distanceFromTop)
 
   display.println(str);
 }
-
-void Display::writeText(String txt, int size)
+void Display::printHorizontallyCentered(String str, int distanceFromTop)
 {
-  display.clearDisplay();
-  display.setTextSize(size);
-  //  display.setFont(&FreeSans9pt7b);
-  display.setTextColor(WHITE);
-  display.setCursor(0, 10);
-  // Display static text
-  display.println(txt);
-  display.display();
+  int16_t x1, y1;
+  uint16_t width, height;
+  display.getTextBounds(str.c_str(), 0, 0, &x1, &y1, &width, &height);
+
+  display.setCursor((SCREEN_WIDTH - width) / 2, distanceFromTop);
+
+  display.println(str);
 }
+
+
 
 #endif

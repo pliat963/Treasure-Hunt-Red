@@ -6,6 +6,7 @@ class Timer
     int newSecStart;                  // the time when a new second starts
     int timerTimeForTheGame;          // minutes
     int timerTimeForTheGameInSeconds; // seconds
+    bool timeIsUp;
 
     int minutesLeft;
     int secondsLeft;
@@ -23,10 +24,12 @@ public:
     void resumeTimer();
     void setTimeForGame(int time);
     String getTimeLeftStr();
+    bool isTimeUp();
 };
 
 Timer::Timer(int minutes = 10) : timerTimeForTheGame(minutes),
                                  timerTimeForTheGameInSeconds(60 * minutes),
+                                 timeIsUp(false),
                                  totalPauseTimeElapsed(0)
 {
 }
@@ -45,16 +48,13 @@ void Timer::tick()
 
         if (timerTimeForTheGameInSeconds - timeElapsed <= 0)
         {
-            Serial.println("Game Over");
+            timeIsUp = true;
         }
         else if (currTime - newSecStart >= 1)
         { // a second passed
             newSecStart = currTime;
             minutesLeft = (timerTimeForTheGameInSeconds - timeElapsed) / 60;
             secondsLeft = (timerTimeForTheGameInSeconds - timeElapsed) % 60;
-            Serial.print(minutesLeft);
-            Serial.print(":");
-            Serial.println(secondsLeft);
         }
     }
     else
@@ -89,4 +89,8 @@ String Timer::getTimeLeftStr()
     String min = minutesLeft < 10 ? ("0" + String(minutesLeft)) : String(minutesLeft);
     String sec = secondsLeft < 10 ? ("0" + String(secondsLeft)) : String(secondsLeft);
     return min + ":" + sec;
+}
+
+bool Timer::isTimeUp(){
+    return timeIsUp;
 }

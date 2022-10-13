@@ -152,21 +152,14 @@ void Display::closeEnoughAnimation(){
     display.setTextColor(BLACK);
     printHorizontallyCentered("Press OK!", 57); //print current distance
     display.display();
-    delay(100);
+    delay(50);
 }
 
 
 
 
 void Display::wellDoneAnimation() {
-  display.clearDisplay();
-
-  display.setTextSize(2); // Draw "well done" text
-  display.setTextColor(WHITE);
-  display.setCursor(10, 20);
-  display.println(F("Well Done"));
-  display.display();     
-  delay(100);    
+   
   // Invert and restore display, pausing in-between
   display.invertDisplay(true);
   delay(1000);

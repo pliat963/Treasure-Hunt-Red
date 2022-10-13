@@ -13,7 +13,11 @@
 // game parameters
 #define MAX_TREASURES_NUMBER 2
 #define CLOSE_ENOUGH_DIST 0.3 // approximately 0.3 meter = 30 cm
-#define MIN_DISTANCE_TO_USE_WIFI_FILTER 0.5
+#define CLOSE_1_DIST 1
+#define CLOSE_2_DIST 5
+#define CLOSE_3_DIST 10
+
+#define MIN_DISTANCE_TO_USE_WIFI_FILTER 0.5 // CHECK maybe delete this
 
 extern int currentBtn1State; // variables to read buttons
 extern int currentBtn2State;
@@ -36,8 +40,8 @@ class Game
   ////////////////////////////////////////////////////////////////////////////////////////////
   double current_dist;
   int current_treasure_index = 0;
-  bool game_over = false;
 
+  bool game_over = false;
   // gets RSSI value, or prints an "out of range" error
   int getRSSI();
   // calculate distance by given rssi signal, using this formula:
@@ -61,6 +65,8 @@ public:
   void connectToWifi();
   // run the game itself. To be called at "loop"
   void play_game();
+  // start again the game
+  void startAgain();
 };
 
 void Game::runStartGameMenu()
@@ -68,6 +74,7 @@ void Game::runStartGameMenu()
   display.startGameMenu();
   treasuresNumber = display.treasuresNumber;
   withTimer = display.withTimer;
+  timerTimeForTheGame = display.timerTimeForTheGame;
   withSound = display.withSound;
 
   buzzer.withSound = withSound;
@@ -76,15 +83,39 @@ void Game::runStartGameMenu()
   {
     timer.setTimeForGame(timerTimeForTheGame);
   }
+  connectToWifi();
 }
 
 void Game::play_game()
 {
+
   int sound_index = 0; // at some values of this variable, the buzzer plays
   timer.startTimer();
   while (!game_over)
   {
     timer.tick();
+
+    if (digitalRead(DOWN_BTN) == LOW)
+    {             // we can mute/unmute the buzzer
+      delay(100); // prevent double-click
+      buzzer.withSound = 1 - buzzer.withSound;
+      // if (buzzer.withSound) {
+      //   withSound = false;
+      //   buzzer.withSound = false;
+      // }else{
+      //   withSound = true;
+      //   buzzer.withSound = true;
+      // }
+    }
+
+    if (withTimer && timer.isTimeUp())
+    { // check if time is up
+
+      endGameTimer_ind();
+      game_over = true;
+      continue;
+    }
+
     current_dist = getDist();
     if (current_dist <= CLOSE_ENOUGH_DIST)
     {
@@ -92,9 +123,8 @@ void Game::play_game()
       {
         buzzer.playgettingCloseSound();
       }
-      display.drawMainGameScreen(current_treasure_index + 1, treasuresNumber, current_dist, timer.getTimeLeftStr(), true);
-      
-      // display.writeText(String(current_dist) + " Press OK!", 3);
+      display.drawMainGameScreen(current_treasure_index + 1, treasuresNumber, current_dist, withTimer, withTimer ? timer.getTimeLeftStr() : "", true);
+
       currentBtn1State = digitalRead(OK_BTN);
       if (currentBtn1State == LOW) // button pressed at close enough distance - treasure found
       {
@@ -127,35 +157,31 @@ void Game::play_game()
         }
       }
     }
-    else if (current_dist <= 1) // very  very close
-    {
-      if (sound_index % 4 == 0)
-      {
-        buzzer.playgettingCloseSound();
-      }
-      display.drawMainGameScreen(current_treasure_index + 1, treasuresNumber, current_dist, timer.getTimeLeftStr());
-    }
-    else if (current_dist <= 5) // very close
-    {
-      if (sound_index % 7 == 0)
-      {
-        buzzer.playgettingCloseSound();
-      }
-      display.drawMainGameScreen(current_treasure_index + 1, treasuresNumber, current_dist, timer.getTimeLeftStr());
-    }
-    else if (current_dist <= 10) // getting closer
-    {
-      if (sound_index % 20 == 0)
-      {
-        buzzer.playgettingCloseSound();
-      }
-      display.drawMainGameScreen(current_treasure_index + 1, treasuresNumber, current_dist, timer.getTimeLeftStr());
-    }
     else
     {
-      display.drawMainGameScreen(current_treasure_index + 1, treasuresNumber, current_dist, timer.getTimeLeftStr());
+      if (current_dist <= CLOSE_1_DIST) // very very close
+      {
+        if (sound_index % 4 == 0)
+        {
+          buzzer.playgettingCloseSound();
+        }
+      }
+      else if (current_dist <= CLOSE_2_DIST) // very close
+      {
+        if (sound_index % 7 == 0)
+        {
+          buzzer.playgettingCloseSound();
+        }
+      }
+      else if (current_dist <= CLOSE_3_DIST) // getting closer
+      {
+        if (sound_index % 20 == 0)
+        {
+          buzzer.playgettingCloseSound();
+        }
+      }
+      display.drawMainGameScreen(current_treasure_index + 1, treasuresNumber, current_dist, withTimer, withTimer ? timer.getTimeLeftStr() : "");
     }
-
     if (sound_index > __INT_MAX__ - 100)
     {
       sound_index = 0;
@@ -165,9 +191,17 @@ void Game::play_game()
   }
 }
 
+// void Game::startAgain()  //CHECK implement or delete this
+// {
+//   game_over == false;
+//   current_treasure_index = 0;
+//   display.game_ready = false;
+//   runStartGameMenu();
+//   play_game();
+// }
 void Game::connectToWifi()
 {
-  display.writeText("Searching...", 2);
+  display.drawSearchingScreen();
   WiFi.begin(ssids[current_treasure_index], passwords[current_treasure_index]); // try to connect to wifi network of i'th treasure
   int time_to_wait = 10000;                                                     // max time to wait before reporting error
                                                                                 //  10000 misiseconds which are 10 seconds
@@ -176,15 +210,14 @@ void Game::connectToWifi()
     delay(500);
     if (time_to_wait == 0)
     {
-      display.writeText("Treasure not found. Please Make sure it is connected to powerbank and within wifi range");
+      display.drawNotFoundScreen();
     }
     else
     {
-      display.writeText("Searching...", 2);
+      display.drawSearchingScreen();
       time_to_wait -= 500;
     }
   }
-  // display.writeText(" Connected", 2); CHECK delete this line
 }
 
 double Game::getDist(int points_number)
@@ -229,10 +262,12 @@ int Game::getRSSI()
   { // error with thw wifi
     while (rssi > 0)
     { // as long as there is an error
-      display.writeText("Searching...", 2);
+      timer.pauseTimer();
+      display.drawSearchingScreen();
       delay(500);
       rssi = WiFi.RSSI();
     }
+    timer.resumeTimer();
     // if we are here, rssi is not positive
     return rssi;
   }
@@ -241,11 +276,15 @@ int Game::getRSSI()
 void Game::endGameSuccess_ind()
 {
   buzzer.playSuccessSound();
-  display.wellDoneAnimation();
+  display.drawWellDoneScreen();
 }
 
 void Game::endGameTimer_ind()
 {
+  int score = (current_treasure_index) / treasuresNumber * 100;
+  String scoreStr = String(score) + "/" + "100";
+  display.drawTimeUpScreen(scoreStr);
+  buzzer.playTimeUpSound();
 }
 
 void Game::treasureFound_ind()
