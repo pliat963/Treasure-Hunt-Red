@@ -66,7 +66,11 @@ void Buzzer::playTimeUpSound()
     {
         return;
     }
-    tone(BUZZER, 261, 100); // CHECK change this
+    tone(BUZZER, 200, 100); // CHECK change this
+    delay(200);
+    tone(BUZZER, 200, 100); // CHECK change this
+    delay(200);
+    tone(BUZZER, 200, 100); // CHECK change this
     delay(400);
 }
 

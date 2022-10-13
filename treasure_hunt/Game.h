@@ -13,7 +13,7 @@
 // game parameters
 #define MAX_TREASURES_NUMBER 2
 #define CLOSE_ENOUGH_DIST 0.3 // approximately 0.3 meter = 30 cm
-#define CLOSE_1_DIST 1
+#define CLOSE_1_DIST 2
 #define CLOSE_2_DIST 5
 #define CLOSE_3_DIST 10
 
@@ -34,9 +34,9 @@ class Game
   Timer timer;
   // parameters of the game:
   int treasuresNumber = 2;     // CHECK change to 1 // number of active treasures in the game. can be 1 or 2 in this case
-  bool withTimer = 0;          // is there timer or not? 1 if there is, 0 if not
-  int timerTimeForTheGame = 5; //  initial time (minutes) for the game
-  bool withSound = 1;          // is there sound or not? 1 if there is, 0 if not
+  bool withTimer = true;       // is there timer or not? 1 if there is, 0 if not
+  int timerTimeForTheGame = 4; //  initial time (minutes) for the game
+  bool withSound = true;       // is there sound or not? 1 if there is, 0 if not
   ////////////////////////////////////////////////////////////////////////////////////////////
   double current_dist;
   int current_treasure_index = 0;
@@ -51,6 +51,7 @@ class Game
   // returns calculated distance using average of points_number samples, and a filter at far distances
   double getDist(int points_number = 10);
 
+  // combimations of sound and animations/screens for some events
   void endGameSuccess_ind();
   void endGameTimer_ind();
   void treasureFound_ind();
@@ -83,7 +84,6 @@ void Game::runStartGameMenu()
   {
     timer.setTimeForGame(timerTimeForTheGame);
   }
-  connectToWifi();
 }
 
 void Game::play_game()
@@ -97,15 +97,8 @@ void Game::play_game()
 
     if (digitalRead(DOWN_BTN) == LOW)
     {             // we can mute/unmute the buzzer
-      delay(100); // prevent double-click
+      delay(130); // prevent double-click
       buzzer.withSound = 1 - buzzer.withSound;
-      // if (buzzer.withSound) {
-      //   withSound = false;
-      //   buzzer.withSound = false;
-      // }else{
-      //   withSound = true;
-      //   buzzer.withSound = true;
-      // }
     }
 
     if (withTimer && timer.isTimeUp())
@@ -123,7 +116,7 @@ void Game::play_game()
       {
         buzzer.playgettingCloseSound();
       }
-      display.drawMainGameScreen(current_treasure_index + 1, treasuresNumber, current_dist, withTimer, withTimer ? timer.getTimeLeftStr() : "", true);
+      display.drawMainGameScreen(current_treasure_index + 1, treasuresNumber, current_dist, withTimer, withTimer ? timer.getTimeLeftStr() : "", true, sound_index);
 
       currentBtn1State = digitalRead(OK_BTN);
       if (currentBtn1State == LOW) // button pressed at close enough distance - treasure found
@@ -191,17 +184,20 @@ void Game::play_game()
   }
 }
 
-// void Game::startAgain()  //CHECK implement or delete this
-// {
-//   game_over == false;
-//   current_treasure_index = 0;
-//   display.game_ready = false;
-//   runStartGameMenu();
-//   play_game();
-// }
+void Game::startAgain() // CHECK implement or delete this
+{
+  ESP.reset();
+  // game_over == false;
+  // current_treasure_index = 0;
+  // display.game_ready = false;
+  // connectToWifi();
+
+  // // runStartGameMenu();
+  // play_game();
+}
 void Game::connectToWifi()
 {
-  display.drawSearchingScreen();
+  display.drawSearchingScreen(current_treasure_index);
   WiFi.begin(ssids[current_treasure_index], passwords[current_treasure_index]); // try to connect to wifi network of i'th treasure
   int time_to_wait = 10000;                                                     // max time to wait before reporting error
                                                                                 //  10000 misiseconds which are 10 seconds
@@ -214,7 +210,7 @@ void Game::connectToWifi()
     }
     else
     {
-      display.drawSearchingScreen();
+      display.drawSearchingScreen(current_treasure_index);
       time_to_wait -= 500;
     }
   }
@@ -260,11 +256,25 @@ int Game::getRSSI()
   }
   else
   { // error with thw wifi
+    timer.pauseTimer();
+    int time_to_wait = 10000; // max time to wait before reporting error (10000 misiseconds which are 10 seconds)
     while (rssi > 0)
     { // as long as there is an error
-      timer.pauseTimer();
-      display.drawSearchingScreen();
-      delay(500);
+      while (WiFi.status() != WL_CONNECTED)
+      {
+        delay(500);
+        timer.tick();
+        if (time_to_wait == 0)
+        {
+          display.drawNotFoundScreen();
+        }
+        else
+        {
+          display.drawSearchingScreen(current_treasure_index);
+          time_to_wait -= 500;
+        }
+      }
+  
       rssi = WiFi.RSSI();
     }
     timer.resumeTimer();

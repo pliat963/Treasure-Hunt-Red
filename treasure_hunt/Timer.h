@@ -55,6 +55,7 @@ void Timer::tick()
             newSecStart = currTime;
             minutesLeft = (timerTimeForTheGameInSeconds - timeElapsed) / 60;
             secondsLeft = (timerTimeForTheGameInSeconds - timeElapsed) % 60;
+         
         }
     }
     else
@@ -62,6 +63,9 @@ void Timer::tick()
 
         currTime = millis() / 1000;
         pauseTimeElapsed = currTime - pauseTime;
+        pauseTime = currTime;
+        totalPauseTimeElapsed +=pauseTimeElapsed;
+
     }
 }
 

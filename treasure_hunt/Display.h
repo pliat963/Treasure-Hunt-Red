@@ -73,7 +73,7 @@ public:
   void drawEndMenuScreen(void);
 
   // the main screen of the game. shows the distance, the time left and the current treasure
-  void drawMainGameScreen(int currentTreasure, int treasuresNumber, double dist, bool withTimer, String time, bool closeEnough = false);
+  void drawMainGameScreen(int currentTreasure, int treasuresNumber, double dist, bool withTimer, String time, bool closeEnough = false, int animationIndex = 0);
   // screen of finding a tressure that is not the last one
   void drawTreasureFoundScreen(void);
   // screen to say that the time is up
@@ -81,7 +81,7 @@ public:
   // well done screen (after finfing all treasures)
   void drawWellDoneScreen();
   // searching wifi
-  void drawSearchingScreen();
+  void drawSearchingScreen(int treasureIndex);
   // wifi not found screen
   void drawNotFoundScreen();
   //////////////////////////////////////////
@@ -110,12 +110,11 @@ public:
   // replace between two options with downward scroll animation. Also update currentOption
   void replaceOption1With2DownAnimation(int option1, int option2);
   void wellDoneAnimation();
-  void closeEnoughAnimation();
+  void closeEnoughAnimation(int animationIndex);
   ////////////////////////////////////////
   // helper function to print text centered horizontally at given dustance from top
   void printHorizontallyCentered(char *str, int distanceFromTop);  // CHECK make public
   void printHorizontallyCentered(String str, int distanceFromTop); // CHECK same
-
 };
 
 Display::Display() : display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1),
@@ -158,12 +157,22 @@ void Display::interactiveScreen(void)
     // read the state of the button:
 
     currentBtn1State = digitalRead(OK_BTN);
-    if (currentBtn1State == LOW)
-    { // continue to next screen
+    currentBtn2State = digitalRead(UP_BTN);
+    if (currentBtn2State == LOW) // up btn clicked, go to menu
+    {                            // continue to next screen
 
       removeFirstScreenAnimation();
       delay(5);
       drawSecondScreen();
+    }
+    else if (currentBtn1State == LOW)
+    {                      // ok btn clicked, use default settings and start game
+      treasuresNumber=2;     
+      withTimer = true;          
+      timerTimeForTheGame = 4; 
+      withSound = true;
+      display.clearDisplay();
+      game_ready = true;
     }
   }
   ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -269,7 +278,5 @@ void Display::printHorizontallyCentered(String str, int distanceFromTop)
 
   display.println(str);
 }
-
-
 
 #endif

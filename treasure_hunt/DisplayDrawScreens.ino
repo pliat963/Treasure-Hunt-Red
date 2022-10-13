@@ -17,7 +17,8 @@ void Display::drawFirstScreen(void) // welcome screen
   delay(700);
   display.setCursor(5, 45);
   display.setTextSize(1);
-  display.println("Press OK to continue");
+  printHorizontallyCentered("Press OK to start", 40); // using default settings
+  printHorizontallyCentered("Press UP for menu", 50);
   display.display();
 }
 
@@ -35,7 +36,7 @@ void Display::drawSecondScreen(void)
   display.display();
   delay(200);
   display.setTextSize(1);
-  printHorizontallyCentered("Continue", 57);
+  printHorizontallyCentered("Continue (Press OK)", 57);
   display.display();
 }
 
@@ -51,7 +52,7 @@ void Display::drawFourthScreen(void)
   display.display();
   delay(200);
   display.setTextSize(1);
-  printHorizontallyCentered("Continue", 57);
+  printHorizontallyCentered("Continue (Press OK)", 57);
   display.display();
 }
 
@@ -70,7 +71,7 @@ void Display::drawFifthScreen(void)
   display.display();
   delay(200);
   display.setTextSize(1);
-  printHorizontallyCentered("Continue", 57);
+  printHorizontallyCentered("Continue (Press OK)", 57);
   display.display();
 }
 
@@ -86,7 +87,7 @@ void Display::drawSixthScreen(void)
   display.display();
   delay(200);
   display.setTextSize(1);
-  printHorizontallyCentered("Continue", 57);
+  printHorizontallyCentered("Continue (Press OK)", 57);
   display.display();
 }
 
@@ -108,7 +109,7 @@ void Display::drawEndMenuScreen(void)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // game screens
 
-void Display::drawMainGameScreen(int currentTreasure, int treasuresNumber, double dist, bool withTimer, String time, bool closeEnough)
+void Display::drawMainGameScreen(int currentTreasure, int treasuresNumber, double dist, bool withTimer, String time, bool closeEnough, int animationIndex)
 { // the main screen of the game. shows the distance, the time left and the current treasure
   screen_index = MAIN_GAME_SCR;
   display.clearDisplay();
@@ -130,7 +131,7 @@ void Display::drawMainGameScreen(int currentTreasure, int treasuresNumber, doubl
 
   if (closeEnough)
   {
-    closeEnoughAnimation();
+    closeEnoughAnimation(animationIndex);
   }
 }
 
@@ -145,7 +146,7 @@ void Display::drawTreasureFoundScreen(void)
   printHorizontallyCentered("treasure", 37);
 
   display.setTextSize(1);
-  printHorizontallyCentered("Continue", 57);
+  printHorizontallyCentered("Continue (Press OK)", 57);
   display.display();
 }
 
@@ -156,11 +157,13 @@ void Display::drawTimeUpScreen(String scoreStr)
   display.setTextSize(2);
   display.setTextColor(WHITE);
   printHorizontallyCentered("Time's up!", 0);
-  printHorizontallyCentered("Score:", 18);
+  display.setTextSize(1);
+  printHorizontallyCentered("Score:", 20);
+  display.setTextSize(2);
   printHorizontallyCentered(scoreStr, 36);
 
-  // display.setTextSize(1);
-  // printHorizontallyCentered("Start again", 56); // CHECK implement this?
+  display.setTextSize(1);
+  printHorizontallyCentered("Play again (press OK)", 56); 
   display.display();
 }
 
@@ -173,24 +176,26 @@ void Display::drawWellDoneScreen()
   display.setTextColor(WHITE);
   printHorizontallyCentered("Well Done!", 0);
   display.setTextSize(1);
-  printHorizontallyCentered("Score:", 18);
-   display.setTextSize(2);
+  printHorizontallyCentered("Score:", 20);
+  display.setTextSize(2);
   printHorizontallyCentered("100/100", 36);
 
   wellDoneAnimation();
-  // display.setTextSize(1);
-  // printHorizontallyCentered("Start again", 56); // CHECK implement this?
+  display.setTextSize(1);
+  printHorizontallyCentered("Play again (press OK)", 56); 
   display.display();
 }
 
 // searching wifi
-void Display::drawSearchingScreen()
+void Display::drawSearchingScreen(int treasureIndex)
 {
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(WHITE);
-  display.setCursor(0, 10);
-  display.println("Searching...");
+  display.setCursor(0, 5);
+  display.println("Searching ");
+  display.setCursor(0, 30);
+  display.println("treasure " + String(treasureIndex + 1) + "...");
   display.display();
 }
 
@@ -204,7 +209,7 @@ void Display::drawNotFoundScreen()
   display.println("Please Make sure it");
   display.println("is connected to");
   display.println("powerbank and within");
-  display.println("wifi range");
+  display.println("wifi range.");
   printHorizontallyCentered("Searching...", 55);
 
   display.display();

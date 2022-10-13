@@ -143,16 +143,20 @@ void Display::replaceOption1With2DownAnimation(int option1, int option2)
 
 
 
-void Display::closeEnoughAnimation(){
-    display.setTextColor(WHITE);
+void Display::closeEnoughAnimation(int animationIndex){
     display.setTextSize(1);
-    printHorizontallyCentered("Press OK!", 57); //print current distance
-    display.display();
-    delay(100); //also delays the changing of the distance, but it is fine at this case (we dont the distance to rapidly grow)
-    display.setTextColor(BLACK);
-    printHorizontallyCentered("Press OK!", 57); //print current distance
-    display.display();
-    delay(50);
+    if (animationIndex % 2000 < 1000)
+    {
+      display.setTextColor(WHITE);
+      printHorizontallyCentered("Press OK!", 57); // print current distance
+      display.display();
+    }
+    else
+    {
+      display.setTextColor(BLACK);
+      printHorizontallyCentered("Press OK!", 57); // print current distance
+      display.display();
+    }
 }
 
 
