@@ -135,6 +135,15 @@ void Display::drawMainGameScreen(int currentTreasure, int treasuresNumber, doubl
   }
 }
 
+void Display::getReadyNumber(int number)
+{
+    display.clearDisplay();
+    display.setTextSize(3);
+    display.setTextColor(WHITE);
+    printHorizontallyCentered(String(number), 20);
+    display.display();
+}
+
 void Display::drawTreasureFoundScreen(void)
 { //"should we use sound?" screen
   screen_index = TREASURE_FOUND_SCR;
@@ -163,7 +172,7 @@ void Display::drawTimeUpScreen(String scoreStr)
   printHorizontallyCentered(scoreStr, 36);
 
   display.setTextSize(1);
-  printHorizontallyCentered("Play again (press OK)", 56); 
+  printHorizontallyCentered("Play again (press OK)", 56);
   display.display();
 }
 
@@ -182,7 +191,7 @@ void Display::drawWellDoneScreen()
 
   wellDoneAnimation();
   display.setTextSize(1);
-  printHorizontallyCentered("Play again (press OK)", 56); 
+  printHorizontallyCentered("Play again (press OK)", 56);
   display.display();
 }
 
@@ -199,17 +208,35 @@ void Display::drawSearchingScreen(int treasureIndex)
   display.display();
 }
 
+void Display::drawOutOfRangeScreen(int treasureIndex)
+{
+  display.clearDisplay();
+  display.setTextSize(2);
+  display.setTextColor(WHITE);
+  printHorizontallyCentered("Out of", 0);
+  printHorizontallyCentered("range", 20);
+  display.setCursor(0, 40);
+  display.setTextSize(1);
+  display.println("Searching treasure " + String(treasureIndex + 1) + "...");
+  display.display();
+}
+
 void Display::drawNotFoundScreen()
 {
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(WHITE);
-  display.setCursor(0, 10);
+  display.setCursor(0, 0);
   display.println("Treasure not found.");
+  display.setCursor(0, 9);
   display.println("Please Make sure it");
+  display.setCursor(0, 18);
   display.println("is connected to");
+  display.setCursor(0, 27);
   display.println("powerbank and within");
+  display.setCursor(0, 36);
   display.println("wifi range.");
+  display.setCursor(0, 45);
   printHorizontallyCentered("Searching...", 55);
 
   display.display();

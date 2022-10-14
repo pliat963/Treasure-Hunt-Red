@@ -19,7 +19,7 @@ class Timer
 public:
     Timer(int minutes);
     void startTimer();
-    void tick();
+    void tick(); // should be called at intervals of less than 1 second
     void pauseTimer();
     void resumeTimer();
     void setTimeForGame(int time);
@@ -40,7 +40,7 @@ void Timer::startTimer()
 }
 
 void Timer::tick()
-{ // should be called at intervals of less than 1 second
+{ 
     if (!paused)
     {
         currTime = millis() / 1000;

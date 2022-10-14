@@ -1,7 +1,22 @@
-#define UP_BTN 12
-#define DOWN_BTN 13
-#define OK_BTN 0
-#define BUZZER 14
+// connections: (using d1 mini)
+// display: scl -> D1
+// display: sda -> D2
+// UP_BTN -> D6 (gpio12)
+// DOWN_BTN -> D7 (gpio13)
+//OK_BTN -> D3 (gpio0)
+// BUZZER ->D5 (gpio14)
+//led: red -> TX (gpio 1)
+//led: green -> RX (gpio 3)
+
+
+
+#define UP_BTN 12 //D6
+#define DOWN_BTN 13 //D7
+#define OK_BTN 0 //D3
+#define BUZZER 14 //D0
+
+#define RED 1 //TX
+#define GREEN 3 //RX
 
 #include "Game.h"
 
@@ -20,6 +35,10 @@ void setup()
   pinMode(OK_BTN, INPUT_PULLUP);
   // buzzer
   pinMode(BUZZER, OUTPUT);
+  //rgb led
+  pinMode(RED, OUTPUT);
+  pinMode(GREEN, OUTPUT);
+
   game.runStartGameMenu(); 
   game.connectToWifi();
 

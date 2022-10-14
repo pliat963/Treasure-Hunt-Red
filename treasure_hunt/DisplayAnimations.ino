@@ -1,9 +1,8 @@
 //////////////////////////////////////////////
 // functions for animations on the screen:
 
-
 ///////////////////////////////////////////////////////////////////////////////////
-//for the start menu:
+// for the start menu:
 
 void Display::removeFirstScreenAnimation(void)
 {
@@ -135,54 +134,34 @@ void Display::replaceOption1With2DownAnimation(int option1, int option2)
   currentOption = option2;
 }
 
-
-
 ///////////////////////////////////////////////////////////////////////////////////
-//for the game:
+// for the game:
 
 
 
-
-void Display::closeEnoughAnimation(int animationIndex){
-    display.setTextSize(1);
-    if (animationIndex % 2000 < 1000)
-    {
-      display.setTextColor(WHITE);
-      printHorizontallyCentered("Press OK!", 57); // print current distance
-      display.display();
-    }
-    else
-    {
-      display.setTextColor(BLACK);
-      printHorizontallyCentered("Press OK!", 57); // print current distance
-      display.display();
-    }
+void Display::closeEnoughAnimation(int animationIndex)
+{
+  display.setTextSize(1);
+  if (animationIndex % 2000 < 1000)
+  {
+    display.setTextColor(WHITE);
+    printHorizontallyCentered("Press OK!", 57); // print current distance
+    display.display();
+  }
+  else
+  {
+    display.setTextColor(BLACK);
+    printHorizontallyCentered("Press OK!", 57); // print current distance
+    display.display();
+  }
 }
 
+void Display::wellDoneAnimation()
+{
 
-
-
-void Display::wellDoneAnimation() {
-   
   // Invert and restore display, pausing in-between
   display.invertDisplay(true);
   delay(1000);
   display.invertDisplay(false);
   delay(1000);
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

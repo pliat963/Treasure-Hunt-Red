@@ -1,5 +1,5 @@
-#ifndef _DISPLAY
-#define _DISPLAY
+#ifndef _DISPLAY_H
+#define _DISPLAY_H
 
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -82,8 +82,12 @@ public:
   void drawWellDoneScreen();
   // searching wifi
   void drawSearchingScreen(int treasureIndex);
+  // wifi became unavailable
+  void drawOutOfRangeScreen(int treasureIndex);
   // wifi not found screen
   void drawNotFoundScreen();
+  //get ready to start after "number" seconds screen
+  void getReadyNumber(int number);
   //////////////////////////////////////////
   // functions to draw and manage the screen of replacing and choosing options. Implementation at "DisplayManageOptionsScreen.ino"
 
@@ -109,6 +113,7 @@ public:
   void replaceOption1With2UpAnimation(int option1, int option2);
   // replace between two options with downward scroll animation. Also update currentOption
   void replaceOption1With2DownAnimation(int option1, int option2);
+
   void wellDoneAnimation();
   void closeEnoughAnimation(int animationIndex);
   ////////////////////////////////////////

@@ -4,7 +4,6 @@
 // sounds of the buzzer
 class Buzzer
 {
-    // void tone(byte pin, int freq, int duration); //the regular "tone" buzzer function doesn't work with esp32
 
 public:
     // default constructor
@@ -14,13 +13,9 @@ public:
     void playTreasureFoundSound();
     void playSuccessSound();
     void playTimeUpSound();
+    void playGetReadySound(int index);
 };
 
-// void Buzzer::tone(byte pin, int freq, int duration)
-// {
-//     ledcWriteTone(0, freq); // play tone
-//     delay(duration);
-// }
 void Buzzer::playgettingCloseSound()
 {
     if (!withSound)
@@ -74,4 +69,20 @@ void Buzzer::playTimeUpSound()
     delay(400);
 }
 
+void Buzzer::playGetReadySound(int index)
+{
+    if (!withSound)
+    {
+        return;
+    }
+    if (index == 1 || index == 2)
+    {
+
+        tone(BUZZER, 300, 100); // CHECK change this
+    }
+    else
+    {
+        tone(BUZZER, 390, 100); // CHECK change this
+    }
+}
 #endif
