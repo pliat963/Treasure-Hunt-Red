@@ -56,7 +56,7 @@ void Display::drawFourthScreen(void)
   display.display();
 }
 
-// CHECK should appear only if the answer to "shoud use timer" was yes
+// should appear only if the answer to "shoud use timer" was yes
 void Display::drawFifthScreen(void)
 { //"how much time?" screen
   screen_index = HOW_MUCH_TIME_SCR;
@@ -75,21 +75,22 @@ void Display::drawFifthScreen(void)
   display.display();
 }
 
-void Display::drawSixthScreen(void)
-{                                      //"should we use sound?" screen
-  screen_index = SHOULD_USE_SOUND_SCR; // 6
-  questionID = 6;
-  currentOption = 1; // use sound as default
-  display.clearDisplay();
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  printHorizontallyCentered("Use sound?", 20);
-  display.display();
-  delay(200);
-  display.setTextSize(1);
-  printHorizontallyCentered("Continue (Press OK)", 57);
-  display.display();
-}
+//removed from start menu, sound can be controlled by the DOWN btn during the game
+// void Display::drawSixthScreen(void)
+// {                                      //"should we use sound?" screen
+//   screen_index = SHOULD_USE_SOUND_SCR; // 6
+//   questionID = 6;
+//   currentOption = 1; // use sound as default
+//   display.clearDisplay();
+//   display.setTextSize(2);
+//   display.setTextColor(WHITE);
+//   printHorizontallyCentered("Use sound?", 20);
+//   display.display();
+//   delay(200);
+//   display.setTextSize(1);
+//   printHorizontallyCentered("Continue (Press OK)", 57);
+//   display.display();
+// }
 
 void Display::drawEndMenuScreen(void)
 { // choices accepted
@@ -188,7 +189,7 @@ void Display::drawWellDoneScreen()
   printHorizontallyCentered("Score:", 20);
   display.setTextSize(2);
   printHorizontallyCentered("100/100", 36);
-
+  display.display();
   wellDoneAnimation();
   display.setTextSize(1);
   printHorizontallyCentered("Play again (press OK)", 56);

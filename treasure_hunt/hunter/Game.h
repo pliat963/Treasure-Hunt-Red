@@ -18,7 +18,7 @@
 #define CLOSE_2_DIST 5
 #define CLOSE_3_DIST 10
 
-#define MIN_DISTANCE_TO_USE_WIFI_FILTER 0.5 // CHECK maybe delete this
+#define MIN_DISTANCE_TO_USE_WIFI_FILTER 0.5 
 
 extern int currentBtn1State; // variables to read buttons
 extern int currentBtn2State;
@@ -132,7 +132,7 @@ void Game::play_game()
 
           delay(1000);
           game_over = true;
-          // CHECK save the time somewhere
+          // CHECK maybe save the time somewhere
         }
         else
         {
@@ -140,7 +140,6 @@ void Game::play_game()
           timer.pauseTimer(); // stop the timer until we are connected to the next treasure
           delay(300);         // to make sure (kind of) that OK button was released
           treasureFound_ind();
-          // CHECK add sound
           while (digitalRead(OK_BTN) != LOW)
           {
             delay(100); // wait for the button to be pressed
@@ -190,7 +189,7 @@ void Game::play_game()
   }
 }
 
-void Game::startAgain() // CHECK implement or delete this
+void Game::startAgain() 
 {
   ESP.reset();
 }
@@ -200,14 +199,31 @@ void Game::connectToWifi()
   WiFi.mode(WIFI_OFF);
   display.drawSearchingScreen(current_treasure_index);
   WiFi.begin(ssids[current_treasure_index], passwords[current_treasure_index]); // try to connect to wifi network of i'th treasure
-  int time_to_wait = 10000;                                                     // max time to wait before reporting error
-                                                                                //  10000 misiseconds which are 10 seconds
+
+  int time_to_wait = 10000; // max time to wait before reporting error (10000 misiseconds which are 10 seconds)
+  bool turnOnLed = false;
+  bool errSound = true;
+
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
     if (time_to_wait == 0)
     {
-      led.turnOnRed(255);
+      if (errSound)
+      {
+        buzzer.playErrorSound();
+        errSound = false;
+      }
+      //make the red led blink
+      if (turnOnLed) 
+      {
+        led.turnOnRed(255);
+      }
+      else
+      {
+        led.turnOff();
+      }
+      turnOnLed = 1 - turnOnLed;
       display.drawNotFoundScreen();
     }
     else
@@ -215,12 +231,12 @@ void Game::connectToWifi()
       display.drawSearchingScreen(current_treasure_index);
       time_to_wait -= 500;
     }
-  } 
-  if (WiFi.status() == WL_CONNECTED){
-     // connected
-     trafficLights_ind();
   }
- 
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    // connected
+    trafficLights_ind();
+  }
 }
 
 double Game::getDist(int points_number)
@@ -264,6 +280,7 @@ int Game::getRSSI()
   else
   { // error with thw wifi
     timer.pauseTimer();
+    buzzer.playErrorSound();
     int time_to_wait = 10000; // max time to wait before reporting error (10000 misiseconds which are 10 seconds)
     bool turnOnLed = false;
     while (rssi > 0)
@@ -280,7 +297,7 @@ int Game::getRSSI()
         }
         turnOnLed = 1 - turnOnLed;
         delay(500);
-        timer.tick();
+        // timer.tick();
         if (time_to_wait == 0)
         {
           display.drawNotFoundScreen();
@@ -295,8 +312,9 @@ int Game::getRSSI()
       rssi = WiFi.RSSI();
     }
     // connected
+    buzzer.playConnectedBackSound();
     timer.resumeTimer();
-    // if we are here, rssi is not positive
+    // if we are here, rssi is not positive (no error)
     return rssi;
   }
 }
@@ -321,6 +339,7 @@ void Game::endGameSuccess_ind()
 {
   buzzer.playSuccessSound();
   display.drawWellDoneScreen();
+  led.turnOnGreen(255);
 }
 
 void Game::endGameTimer_ind()

@@ -40,6 +40,8 @@ void Timer::startTimer()
 {
     startTime = millis() / 1000;
     newSecStart = startTime;
+    minutesLeft = timerTimeForTheGameInSeconds / 60;
+    secondsLeft = timerTimeForTheGameInSeconds % 60;
 }
 
 void Timer::tick()
@@ -68,7 +70,7 @@ void Timer::tick()
         pauseTimeElapsed = currTime - pauseTime;
         pauseTime = currTime;
         totalPauseTimeElapsed +=pauseTimeElapsed;
-
+  
     }
 }
 
@@ -80,7 +82,7 @@ void Timer::pauseTimer()
 
 void Timer::resumeTimer()
 {
-    totalPauseTimeElapsed += pauseTimeElapsed;
+    tick();
     paused = false;
     newSecStart = millis() / 1000;
 }

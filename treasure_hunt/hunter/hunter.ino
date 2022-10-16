@@ -48,7 +48,7 @@ void loop()
 {
 
   game.play_game();
-  //here game is over //CHECK implement or delete this
+  //here game is over
   if (digitalRead(OK_BTN) == LOW)
   { // start again
     game.startAgain();

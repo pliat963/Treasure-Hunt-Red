@@ -11,6 +11,8 @@ public:
     bool withSound;
     void playgettingCloseSound();
     void playTreasureFoundSound();
+    void playConnectedBackSound();
+    void playErrorSound();
     void playSuccessSound();
     void playTimeUpSound();
     void playGetReadySound(int index);
@@ -36,6 +38,26 @@ void Buzzer::playTreasureFoundSound()
     delay(300);
 }
 
+void Buzzer::playConnectedBackSound()
+{
+    if (!withSound)
+    {
+        return;
+    }
+    tone(BUZZER, 400, 100);
+    delay(400);
+}
+void Buzzer::playErrorSound()
+{
+    if (!withSound)
+    {
+        return;
+    }
+    tone(BUZZER, 200, 100);
+    delay(200);
+    tone(BUZZER, 200, 100); 
+    delay(400);
+}
 void Buzzer::playSuccessSound()
 {
     if (!withSound)
@@ -61,11 +83,11 @@ void Buzzer::playTimeUpSound()
     {
         return;
     }
-    tone(BUZZER, 200, 100); // CHECK change this
+    tone(BUZZER, 200, 100); 
     delay(200);
-    tone(BUZZER, 200, 100); // CHECK change this
+    tone(BUZZER, 200, 100);
     delay(200);
-    tone(BUZZER, 200, 100); // CHECK change this
+    tone(BUZZER, 200, 100); 
     delay(400);
 }
 
@@ -78,11 +100,11 @@ void Buzzer::playGetReadySound(int index)
     if (index == 1 || index == 2)
     {
 
-        tone(BUZZER, 300, 100); // CHECK change this
+        tone(BUZZER, 300, 100); 
     }
     else
     {
-        tone(BUZZER, 390, 100); // CHECK change this
+        tone(BUZZER, 390, 100); 
     }
 }
 #endif

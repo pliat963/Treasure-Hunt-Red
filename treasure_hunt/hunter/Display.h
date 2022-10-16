@@ -54,7 +54,7 @@ public:
 
   Display();
   // start and manage the start-game menu
-  void startGameMenu(void); // CHECK make public look more at game.startGameMenu
+  void startGameMenu(void); 
   // handles the different cases of screens and buttons choices interactively
   void interactiveScreen(void);
   ///////////////////////////////////////////////
@@ -67,8 +67,8 @@ public:
   void drawFourthScreen(void);
   //"how much time" screen
   void drawFifthScreen(void);
-  //"should we use sound?" screen
-  void drawSixthScreen(void);
+  ///// //"should we use sound?" screen - removed from start menu
+  ///// void drawSixthScreen(void); - removed from start menu
   // choices accepted screen
   void drawEndMenuScreen(void);
 
@@ -118,8 +118,8 @@ public:
   void closeEnoughAnimation(int animationIndex);
   ////////////////////////////////////////
   // helper function to print text centered horizontally at given dustance from top
-  void printHorizontallyCentered(char *str, int distanceFromTop);  // CHECK make public
-  void printHorizontallyCentered(String str, int distanceFromTop); // CHECK same
+  void printHorizontallyCentered(char *str, int distanceFromTop);  
+  void printHorizontallyCentered(String str, int distanceFromTop); 
 };
 
 Display::Display() : display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1),
@@ -141,15 +141,6 @@ void Display::startGameMenu(void)
   drawFirstScreen();
   while (!game_ready)
   {
-
-    // CHECK maybe delete this
-    //  if (digitalRead(OK_BTN) == LOW || digitalRead(UP_BTN)==LOW || digitalRead(DOWN_BTN)==LOW)
-    //  {  //enable to continue with the menu only if no buttons are clicked.
-    //     // To prevent leaving a button pressed and not realy choosing
-    //     delay(100);
-    //   continue; //wait for the buttons to be released
-
-    //  }
     interactiveScreen();
     delay(120); // to prevent "two choices" with one click
   }

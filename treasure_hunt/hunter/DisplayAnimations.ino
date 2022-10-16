@@ -160,6 +160,7 @@ void Display::wellDoneAnimation()
 {
 
   // Invert and restore display, pausing in-between
+  delay(500);
   display.invertDisplay(true);
   delay(1000);
   display.invertDisplay(false);
