@@ -4,7 +4,7 @@
 //How to use?
 //1. Create a Timer instance with the wanted amount of time (minutes)
 //2. Call the function startTimer()
-//3. Call the function tick() at intervals of less than 1 sec
+//3. Call the function tick() at intervals of less than 1 sec, when the timer is not paused
 //4. Use the function getTimeLeftStr() to get the time and print it somewhere
 
 
@@ -46,6 +46,8 @@ Timer::Timer(int minutes = 10) //default initial value
 void Timer::startTimer() {
   startTime = millis() / 1000;
   newSecStart = startTime;
+  minutesLeft = timerTimeForTheGameInSeconds / 60;
+  secondsLeft = timerTimeForTheGameInSeconds % 60;
 }
 
 void Timer::tick() {
@@ -77,8 +79,7 @@ void Timer::pauseTimer() {
 }
 
 void Timer::resumeTimer() {
-  timer.tick();
-  totalPauseTimeElapsed += pauseTimeElapsed;
+  tick();
   paused = false;
   newSecStart = millis() / 1000;
 }
