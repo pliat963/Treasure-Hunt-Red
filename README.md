@@ -25,4 +25,7 @@ SECRETS - TODO
 
 # Used Libraries
 
-TODO
+1. Adafruit SSD1306 by Adafruit, version 2.5.7
+2. Adafruit GFX Library by Adafruit, version 1.11.3
+3. Adafruit BusIO by Adafruit, version 1.13.2
+4. Kalman filter library: https://github.com/bachagas/Kalman (last commit: 2 Oct 2014)
