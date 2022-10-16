@@ -1,24 +1,28 @@
-# Treasure-Hunt-Red (not ready yet...)
+# Treasure-Hunt-Red
 
 A "treasure hunt" game that aims to encourage playing outside.
-The game consists of a device that searches for the treasures, and one or more treasures.
+The game consists of a treasure-searching device ("hunter"), and one or more treasures.
+
 
 By: Plia Trabelsi, Yonatan Reches, Noam Reches
 
 # Repository Structure
 
+UNIT TESTS directory - contains seperate components tests 
+
 treasure_hunt directory - contains the files of the project: 
 
    treasure_hunt/treasures directory - the code for the "treasure" devices
    
-   treasure_hunt/seeker directory - the code for the device that dearches the treasures    
+   treasure_hunt/hunter directory - the code for the device that dearches the treasures    
 
-unit_tests directory - contains seperate components tests - DIDN'T UPLOAD YET
+ASSETS directory - contains a paraboic reflector 3d-print file, used for one treasure
 
-assets directory - contains a paraboic reflector 3d-print file - DIDN'T UPLOAD YET
+user interface.pdf - describes how to use the project
 
-user interface.docs - describes how to use the project - DIDN'T UPLOAD YET
+SECRETS - TODO
 
 
 # Used Libraries
-...
+
+TODO
