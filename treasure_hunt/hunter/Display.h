@@ -30,6 +30,7 @@
 extern int currentBtn1State; // variables to read buttons
 extern int currentBtn2State;
 extern int currentBtn3State;
+
 class Display
 {
 public:
@@ -163,10 +164,10 @@ void Display::interactiveScreen(void)
     }
     else if (currentBtn1State == LOW)
     {                      // ok btn clicked, use default settings and start game
-      treasuresNumber=1;     
-      withTimer = true;          
-      timerTimeForTheGame = 4; 
-      withSound = true;
+      treasuresNumber= TREASURES_NUMBER_D;     
+      withTimer = WITH_TIMER_D;          
+      timerTimeForTheGame = TIME_FOR_GAME_D; 
+      withSound = WITH_SOUND_D;
       display.clearDisplay();
       game_ready = true;
     }

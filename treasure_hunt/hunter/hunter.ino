@@ -1,10 +1,10 @@
-// connections: (using d1 mini)
+// connections: (using  board d1 mini)
 // display: scl -> D1
 // display: sda -> D2
 // UP_BTN -> D6 (gpio12)
 // DOWN_BTN -> D7 (gpio13)
 //OK_BTN -> D3 (gpio0)
-// BUZZER ->D5 (gpio14)
+// BUZZER -> D5 (gpio14)
 //led: red -> TX (gpio 1)
 //led: green -> RX (gpio 3)
 
@@ -20,7 +20,7 @@
 
 #include "Game.h"
 
-int currentBtn1State; // variables to read buttons that affects the display
+int currentBtn1State; // variables to read buttons that affects the display ang game
 int currentBtn2State;
 int currentBtn3State;
 

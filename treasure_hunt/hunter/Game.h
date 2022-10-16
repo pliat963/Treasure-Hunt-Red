@@ -1,6 +1,8 @@
 #ifndef _GAME_H
 #define _GAME_H
 
+#include "SECRETS.h"
+#include "DEFAULT_PARAMETERS.h"
 #include "Display.h"
 #include "Buzzer.h"
 #include "RGBLed.h"
@@ -11,8 +13,15 @@
 #include <math.h>
 #include "Kalman.h"
 
-// game parameters
-#define MAX_TREASURES_NUMBER 2
+//treasures info: ------------------------------------------------------------------------------
+#define MAX_TREASURES_NUMBER 2 
+const char *ssids[MAX_TREASURES_NUMBER] = {SSID_1, SSID_2}; //defined at SECRETS.h
+const char *passwords[MAX_TREASURES_NUMBER] = {PASSWORD_1, PASSWORD_2}; //defined at SECRETS.h
+//----------------------------------------------------------------------------------------------
+
+
+
+//parameters
 #define CLOSE_ENOUGH_DIST 0.4 // approximately 0.4 meter = 40 cm
 #define CLOSE_1_DIST 2
 #define CLOSE_2_DIST 5
@@ -25,8 +34,7 @@ extern int currentBtn2State;
 extern int currentBtn3State;
 
 Kalman myFilter(0.125, 32, 1023, 0); // suggested initial values for high noise filtering
-const char *ssids[MAX_TREASURES_NUMBER] = {"TREASURE1", "TREASURE2"};
-const char *passwords[MAX_TREASURES_NUMBER] = {"78907890", "34563456"};
+
 
 class Game
 {
@@ -35,10 +43,10 @@ class Game
   RGBLed led;
   Timer timer;
   // parameters of the game:
-  int treasuresNumber = 2;     // CHECK change to 1 // number of active treasures in the game. can be 1 or 2 in this case
-  bool withTimer = true;       // is there timer or not? 1 if there is, 0 if not
-  int timerTimeForTheGame = 4; //  initial time (minutes) for the game
-  bool withSound = true;       // is there sound or not? 1 if there is, 0 if not
+  int treasuresNumber = TREASURES_NUMBER_D;     // number of active treasures in the game. can be 1 or 2 in this case
+  bool withTimer = WITH_TIMER_D;       // is there timer or not? 1 if there is, 0 if not
+  int timerTimeForTheGame = TIME_FOR_GAME_D; //  initial time (minutes) for the game
+  bool withSound = WITH_SOUND_D;       // is there sound or not? 1 if there is, 0 if not
   ////////////////////////////////////////////////////////////////////////////////////////////
   double current_dist;
   int current_treasure_index = 0;
