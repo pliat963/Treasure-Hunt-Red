@@ -14,13 +14,13 @@ treasure_hunt directory - contains the files of the project:
 
    treasure_hunt/treasures directory - the code for the "treasure" devices
    
-   treasure_hunt/hunter directory - the code for the device that dearches the treasures    
+   treasure_hunt/hunter directory - the code for the device that dearches the treasures 
+   
+   treasure_hunt/hunter/SECRETS.h - contains wifi passwords, to be replaced
 
 ASSETS directory - contains a paraboic reflector 3d-print file, used for one treasure
 
 user interface.pdf - describes how to use the project
-
-SECRETS - TODO
 
 
 # Used Libraries
