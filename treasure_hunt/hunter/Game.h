@@ -1,7 +1,7 @@
 #ifndef _GAME_H
 #define _GAME_H
 
-#include "SECRETS.h"
+#include "../SECRETS.h"
 #include "DEFAULT_PARAMETERS.h"
 #include "Display.h"
 #include "Buzzer.h"
