@@ -1,7 +1,7 @@
 #ifndef _GAME_H
 #define _GAME_H
 
-#include "../SECRETS.h"
+#include "SECRETS.h"
 #include "DEFAULT_PARAMETERS.h"
 #include "Display.h"
 #include "Buzzer.h"
@@ -13,28 +13,25 @@
 #include <math.h>
 #include "Kalman.h"
 
-//treasures info: ------------------------------------------------------------------------------
-#define MAX_TREASURES_NUMBER 2 
-const char *ssids[MAX_TREASURES_NUMBER] = {SSID_1, SSID_2}; //defined at SECRETS.h
-const char *passwords[MAX_TREASURES_NUMBER] = {PASSWORD_1, PASSWORD_2}; //defined at SECRETS.h
+// treasures info: ------------------------------------------------------------------------------
+#define MAX_TREASURES_NUMBER 2
+const char *ssids[MAX_TREASURES_NUMBER] = {SSID_1, SSID_2};             // defined at SECRETS.h
+const char *passwords[MAX_TREASURES_NUMBER] = {PASSWORD_1, PASSWORD_2}; // defined at SECRETS.h
 //----------------------------------------------------------------------------------------------
 
-
-
-//parameters
+// parameters
 #define CLOSE_ENOUGH_DIST 0.4 // approximately 0.4 meter = 40 cm
 #define CLOSE_1_DIST 2
 #define CLOSE_2_DIST 5
 #define CLOSE_3_DIST 10
 
-#define MIN_DISTANCE_TO_USE_WIFI_FILTER 0.5 
+#define MIN_DISTANCE_TO_USE_WIFI_FILTER 0.5
 
 extern int currentBtn1State; // variables to read buttons
 extern int currentBtn2State;
 extern int currentBtn3State;
 
 Kalman myFilter(0.125, 32, 1023, 0); // suggested initial values for high noise filtering
-
 
 class Game
 {
@@ -43,13 +40,14 @@ class Game
   RGBLed led;
   Timer timer;
   // parameters of the game:
-  int treasuresNumber = TREASURES_NUMBER_D;     // number of active treasures in the game. can be 1 or 2 in this case
-  bool withTimer = WITH_TIMER_D;       // is there timer or not? 1 if there is, 0 if not
+  int treasuresNumber = TREASURES_NUMBER_D;  // number of active treasures in the game. can be 1 or 2 in this case
+  bool withTimer = WITH_TIMER_D;             // is there timer or not? 1 if there is, 0 if not
   int timerTimeForTheGame = TIME_FOR_GAME_D; //  initial time (minutes) for the game
-  bool withSound = WITH_SOUND_D;       // is there sound or not? 1 if there is, 0 if not
+  bool withSound = WITH_SOUND_D;             // is there sound or not? 1 if there is, 0 if not
   ////////////////////////////////////////////////////////////////////////////////////////////
   double current_dist;
   int current_treasure_index = 0;
+
 
   bool game_over = false;
   // gets RSSI value, or prints an "out of range" error
@@ -60,6 +58,7 @@ class Game
   double calcDistFromRSSI(double rssi);
   // returns calculated distance using average of points_number samples, and a filter at far distances
   double getDist(int points_number = 10);
+
 
   // combimations of sound and animations/screens for some events
   void trafficLights_ind();
@@ -112,13 +111,13 @@ void Game::play_game()
       buzzer.withSound = 1 - buzzer.withSound;
     }
 
-    if (withTimer && timer.isTimeUp())
+    if (withTimer && timer.isTimeUp()) //CHECK
     { // check if time is up
-
       endGameTimer_ind();
       game_over = true;
       continue;
     }
+
 
     current_dist = getDist();
     if (current_dist <= CLOSE_ENOUGH_DIST)
@@ -128,7 +127,13 @@ void Game::play_game()
         buzzer.playgettingCloseSound();
         led.turnOnGreen(255);
       }
-      display.drawMainGameScreen(current_treasure_index + 1, treasuresNumber, current_dist, withTimer, withTimer ? timer.getTimeLeftStr() : "", true, sound_index);
+      display.drawMainGameScreen(current_treasure_index + 1,
+                                 treasuresNumber,
+                                 current_dist,
+                                 withTimer,
+                                 withTimer ? timer.getTimeLeftStr() : "",
+                                 true,
+                                 sound_index);
 
       currentBtn1State = digitalRead(OK_BTN);
       if (currentBtn1State == LOW) // button pressed at close enough distance - treasure found
@@ -185,7 +190,12 @@ void Game::play_game()
           buzzer.playgettingCloseSound();
         }
       }
-      display.drawMainGameScreen(current_treasure_index + 1, treasuresNumber, current_dist, withTimer, withTimer ? timer.getTimeLeftStr() : "");
+      display.drawMainGameScreen(current_treasure_index + 1,
+                                 treasuresNumber,
+                                 current_dist,
+                                 withTimer,
+                                 withTimer ? timer.getTimeLeftStr() : ""
+                                );
     }
     if (sound_index > __INT_MAX__ - 100)
     {
@@ -197,7 +207,7 @@ void Game::play_game()
   }
 }
 
-void Game::startAgain() 
+void Game::startAgain()
 {
   ESP.reset();
 }
@@ -222,8 +232,8 @@ void Game::connectToWifi()
         buzzer.playErrorSound();
         errSound = false;
       }
-      //make the red led blink
-      if (turnOnLed) 
+      // make the red led blink
+      if (turnOnLed)
       {
         led.turnOnRed(255);
       }
@@ -352,7 +362,7 @@ void Game::endGameSuccess_ind()
 
 void Game::endGameTimer_ind()
 {
-  int score = (current_treasure_index) / treasuresNumber * 100;
+  int score = (current_treasure_index)  * 100 / treasuresNumber;
   String scoreStr = String(score) + "/" + "100";
   display.drawTimeUpScreen(scoreStr);
   buzzer.playTimeUpSound();

@@ -75,22 +75,22 @@ void Display::drawFifthScreen(void)
   display.display();
 }
 
-//removed from start menu, sound can be controlled by the DOWN btn during the game
-// void Display::drawSixthScreen(void)
-// {                                      //"should we use sound?" screen
-//   screen_index = SHOULD_USE_SOUND_SCR; // 6
-//   questionID = 6;
-//   currentOption = 1; // use sound as default
-//   display.clearDisplay();
-//   display.setTextSize(2);
-//   display.setTextColor(WHITE);
-//   printHorizontallyCentered("Use sound?", 20);
-//   display.display();
-//   delay(200);
-//   display.setTextSize(1);
-//   printHorizontallyCentered("Continue (Press OK)", 57);
-//   display.display();
-// }
+// removed from start menu, sound can be controlled by the DOWN btn during the game
+//  void Display::drawSixthScreen(void)
+//  {                                      //"should we use sound?" screen
+//    screen_index = SHOULD_USE_SOUND_SCR; // 6
+//    questionID = 6;
+//    currentOption = 1; // use sound as default
+//    display.clearDisplay();
+//    display.setTextSize(2);
+//    display.setTextColor(WHITE);
+//    printHorizontallyCentered("Use sound?", 20);
+//    display.display();
+//    delay(200);
+//    display.setTextSize(1);
+//    printHorizontallyCentered("Continue (Press OK)", 57);
+//    display.display();
+//  }
 
 void Display::drawEndMenuScreen(void)
 { // choices accepted
@@ -130,6 +130,7 @@ void Display::drawMainGameScreen(int currentTreasure, int treasuresNumber, doubl
   display.print(dist); // print current distance
   display.display();
 
+
   if (closeEnough)
   {
     closeEnoughAnimation(animationIndex);
@@ -138,11 +139,11 @@ void Display::drawMainGameScreen(int currentTreasure, int treasuresNumber, doubl
 
 void Display::getReadyNumber(int number)
 {
-    display.clearDisplay();
-    display.setTextSize(3);
-    display.setTextColor(WHITE);
-    printHorizontallyCentered(String(number), 20);
-    display.display();
+  display.clearDisplay();
+  display.setTextSize(3);
+  display.setTextColor(WHITE);
+  printHorizontallyCentered(String(number), 20);
+  display.display();
 }
 
 void Display::drawTreasureFoundScreen(void)
@@ -230,7 +231,7 @@ void Display::drawNotFoundScreen()
   display.setCursor(0, 0);
   display.println("Treasure not found.");
   display.setCursor(0, 9);
-  display.println("Please Make sure it");
+  display.println("Please make sure it");
   display.setCursor(0, 18);
   display.println("is connected to");
   display.setCursor(0, 27);

@@ -1,7 +1,7 @@
 #ifndef _DEFAULT_PARAMETERS_H
 #define _DEFAULT_PARAMETERS_H
 
-#define TREASURES_NUMBER_D 1  // number of active treasures in the game. can be 1 or 2 in this case
+#define TREASURES_NUMBER_D 3  // number of active treasures in the game. can be 1 or 2 in this case
                               //optional: if you add a treasure at SECTRETS.h, it can be  
                               //          between 1 and MAX_TREASURES_NUMBER
                         

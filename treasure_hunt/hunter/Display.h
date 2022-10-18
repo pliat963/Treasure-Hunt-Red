@@ -55,7 +55,7 @@ public:
 
   Display();
   // start and manage the start-game menu
-  void startGameMenu(void); 
+  void startGameMenu(void);
   // handles the different cases of screens and buttons choices interactively
   void interactiveScreen(void);
   ///////////////////////////////////////////////
@@ -87,7 +87,7 @@ public:
   void drawOutOfRangeScreen(int treasureIndex);
   // wifi not found screen
   void drawNotFoundScreen();
-  //get ready to start after "number" seconds screen
+  // get ready to start after "number" seconds screen
   void getReadyNumber(int number);
   //////////////////////////////////////////
   // functions to draw and manage the screen of replacing and choosing options. Implementation at "DisplayManageOptionsScreen.ino"
@@ -119,8 +119,8 @@ public:
   void closeEnoughAnimation(int animationIndex);
   ////////////////////////////////////////
   // helper function to print text centered horizontally at given dustance from top
-  void printHorizontallyCentered(char *str, int distanceFromTop);  
-  void printHorizontallyCentered(String str, int distanceFromTop); 
+  void printHorizontallyCentered(char *str, int distanceFromTop);
+  void printHorizontallyCentered(String str, int distanceFromTop);
 };
 
 Display::Display() : display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1),
@@ -163,10 +163,10 @@ void Display::interactiveScreen(void)
       drawSecondScreen();
     }
     else if (currentBtn1State == LOW)
-    {                      // ok btn clicked, use default settings and start game
-      treasuresNumber= TREASURES_NUMBER_D;     
-      withTimer = WITH_TIMER_D;          
-      timerTimeForTheGame = TIME_FOR_GAME_D; 
+    { // ok btn clicked, use default settings and start game
+      treasuresNumber = TREASURES_NUMBER_D;
+      withTimer = WITH_TIMER_D;
+      timerTimeForTheGame = TIME_FOR_GAME_D;
       withSound = WITH_SOUND_D;
       display.clearDisplay();
       game_ready = true;
