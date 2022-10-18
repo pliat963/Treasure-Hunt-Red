@@ -21,7 +21,7 @@ By: Plia Trabelsi, Yonatan Reches, Noam Reches
 
 - ASSETS directory - contains a paraboic reflector 3d-print file, used for one treasure
 
-- user interface.pdf - describes how to use the project
+- User Interface.pdf - describes how to use the project
 
 
 
