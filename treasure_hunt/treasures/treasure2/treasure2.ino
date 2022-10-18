@@ -1,7 +1,7 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h> 
 #include <ESP8266WebServer.h>  
-#include "../SECRETS.h"
+#include "SECRETS.h"
 
 const char* ssid = SSID_2;
 const char* password = PASSWORD_2;
