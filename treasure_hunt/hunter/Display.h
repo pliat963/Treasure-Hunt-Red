@@ -80,7 +80,7 @@ public:
   // screen to say that the time is up
   void drawTimeUpScreen(String scoreStr);
   // well done screen (after finfing all treasures)
-  void drawWellDoneScreen();
+  void drawWellDoneScreen(bool withTimer, String time);
   // searching wifi
   void drawSearchingScreen(int treasureIndex);
   // wifi became unavailable

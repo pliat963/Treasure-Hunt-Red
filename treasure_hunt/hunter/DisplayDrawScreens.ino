@@ -1,11 +1,10 @@
-
 ///////////////////////////////////////////////
 // functions to "draw" the different screens:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Start menu screens:
 
-void Display::drawFirstScreen(void) // welcome screen
+void Display::drawFirstScreen(void)  // welcome screen
 {
   screen_index = 1;
   display.clearDisplay();
@@ -17,14 +16,13 @@ void Display::drawFirstScreen(void) // welcome screen
   delay(700);
   display.setCursor(5, 45);
   display.setTextSize(1);
-  printHorizontallyCentered("Press OK to start", 40); // using default settings
+  printHorizontallyCentered("Press OK to start", 40);  // using default settings
   printHorizontallyCentered("Press UP for menu", 50);
   display.display();
 }
 
-void Display::drawSecondScreen(void)
-{                                      //"Choose number of treasures" screen
-  screen_index = NUM_OF_TREASURES_SCR; // 2
+void Display::drawSecondScreen(void) {  //"Choose number of treasures" screen
+  screen_index = NUM_OF_TREASURES_SCR;  // 2
   questionID = 2;
   display.clearDisplay();
   display.setTextSize(2);
@@ -40,11 +38,10 @@ void Display::drawSecondScreen(void)
   display.display();
 }
 
-void Display::drawFourthScreen(void)
-{                                      //"should we set a timer?" screen
-  screen_index = SHOULD_USE_TIMER_SCR; // 4
+void Display::drawFourthScreen(void) {  //"should we set a timer?" screen
+  screen_index = SHOULD_USE_TIMER_SCR;  // 4
   questionID = 4;
-  currentOption = 1; // use sound as default
+  currentOption = 1;  // use sound as default
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(WHITE);
@@ -57,8 +54,7 @@ void Display::drawFourthScreen(void)
 }
 
 // should appear only if the answer to "shoud use timer" was yes
-void Display::drawFifthScreen(void)
-{ //"how much time?" screen
+void Display::drawFifthScreen(void) {  //"how much time?" screen
   screen_index = HOW_MUCH_TIME_SCR;
   questionID = 5;
   currentOption = 2;
@@ -92,8 +88,7 @@ void Display::drawFifthScreen(void)
 //    display.display();
 //  }
 
-void Display::drawEndMenuScreen(void)
-{ // choices accepted
+void Display::drawEndMenuScreen(void) {  // choices accepted
   screen_index = END_OF_MENU_SCR;
   display.clearDisplay();
   display.setTextSize(3);
@@ -110,35 +105,31 @@ void Display::drawEndMenuScreen(void)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // game screens
 
-void Display::drawMainGameScreen(int currentTreasure, int treasuresNumber, double dist, bool withTimer, String time, bool closeEnough, int animationIndex)
-{ // the main screen of the game. shows the distance, the time left and the current treasure
+void Display::drawMainGameScreen(int currentTreasure, int treasuresNumber, double dist, bool withTimer, String time, bool closeEnough, int animationIndex) {  // the main screen of the game. shows the distance, the time left and the current treasure
   screen_index = MAIN_GAME_SCR;
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 3);
-  display.print("Treasure " + String(currentTreasure) + "/" + String(treasuresNumber)); // print treasure number
+  display.print("Treasure " + String(currentTreasure) + "/" + String(treasuresNumber));  // print treasure number
 
-  if (withTimer)
-  {
+  if (withTimer) {
     display.setCursor(95, 3);
-    display.print(time); // print time left
+    display.print(time);  // print time left
   }
 
   display.setTextSize(3);
   display.setCursor(10, 27);
-  display.print(dist); // print current distance
+  display.print(dist);  // print current distance
   display.display();
 
 
-  if (closeEnough)
-  {
+  if (closeEnough) {
     closeEnoughAnimation(animationIndex);
   }
 }
 
-void Display::getReadyNumber(int number)
-{
+void Display::getReadyNumber(int number) {
   display.clearDisplay();
   display.setTextSize(3);
   display.setTextColor(WHITE);
@@ -146,8 +137,7 @@ void Display::getReadyNumber(int number)
   display.display();
 }
 
-void Display::drawTreasureFoundScreen(void)
-{ //"should we use sound?" screen
+void Display::drawTreasureFoundScreen(void) {  //"should we use sound?" screen
   screen_index = TREASURE_FOUND_SCR;
   display.clearDisplay();
   display.setTextSize(2);
@@ -161,8 +151,7 @@ void Display::drawTreasureFoundScreen(void)
   display.display();
 }
 
-void Display::drawTimeUpScreen(String scoreStr)
-{
+void Display::drawTimeUpScreen(String scoreStr) {
   screen_index = TIME_UP_SCR;
   display.clearDisplay();
   display.setTextSize(2);
@@ -178,28 +167,32 @@ void Display::drawTimeUpScreen(String scoreStr)
   display.display();
 }
 
-void Display::drawWellDoneScreen()
-{
+void Display::drawWellDoneScreen(bool withTimer, String time) {
   screen_index = WELL_DONE_SCR;
   display.clearDisplay();
   display.clearDisplay();
-  display.setTextSize(2);
   display.setTextColor(WHITE);
-  printHorizontallyCentered("Well Done!", 0);
-  display.setTextSize(1);
-  printHorizontallyCentered("Score:", 20);
+  if (withTimer) {
+    display.setTextSize(1);
+    display.setCursor(95, 1);
+    display.print(time);  // print time left
+  }
   display.setTextSize(2);
-  printHorizontallyCentered("100/100", 36);
+  printHorizontallyCentered("Well Done!", 13);
+  display.setTextSize(1);
+  display.setCursor(0, 39);
+  display.print("Score: ");
+  display.setTextSize(2);
+  display.setCursor(37, 36);
+  display.print("100/100");
   display.display();
-  wellDoneAnimation();
   display.setTextSize(1);
   printHorizontallyCentered("Play again (press OK)", 56);
   display.display();
 }
 
 // searching wifi
-void Display::drawSearchingScreen(int treasureIndex)
-{
+void Display::drawSearchingScreen(int treasureIndex) {
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(WHITE);
@@ -210,8 +203,7 @@ void Display::drawSearchingScreen(int treasureIndex)
   display.display();
 }
 
-void Display::drawOutOfRangeScreen(int treasureIndex)
-{
+void Display::drawOutOfRangeScreen(int treasureIndex) {
   display.clearDisplay();
   display.setTextSize(2);
   display.setTextColor(WHITE);
@@ -223,8 +215,7 @@ void Display::drawOutOfRangeScreen(int treasureIndex)
   display.display();
 }
 
-void Display::drawNotFoundScreen()
-{
+void Display::drawNotFoundScreen() {
   display.clearDisplay();
   display.setTextSize(1);
   display.setTextColor(WHITE);
