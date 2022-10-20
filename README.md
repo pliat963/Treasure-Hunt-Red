@@ -19,7 +19,7 @@ By: Plia Trabelsi, Yonatan Reches, Noam Reches
    - SECRETS.h - placed at treasure_hunt/hunter, treasure_hunt/treasures/treasure1 and treasure_hunt/treasures/treasure2. 
       contains wifi passwords, to be replaced by the real passwords
 
-- ASSETS directory - contains a paraboic reflector 3d-print file, used for one treasure
+- ASSETS directory - contains a paraboic reflector 3d-print file, used for the hunter
 
 - User Interface.pdf - describes how to use the project
 
