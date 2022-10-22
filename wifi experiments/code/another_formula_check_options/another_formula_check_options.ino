@@ -65,10 +65,25 @@ void setup()
 
 void loop()
 {
+  //getDistAverage();
   getDistKalmanFilter();
   delay(5);
 }
 
+void getDistAverage(int pointsNumber){
+  double total_rssi = 0;
+  double dist;
+  for (int i = 0; i < pointsNumber; i++)
+  {
+    total_rssi +=  WiFi.RSSI();
+    delay(5);
+  }
+  double avg_rssi = total_rssi/pointsNumber;
+
+  double power =(-40.054-avg_rssi)/20; 
+  dist = pow(10, power);
+  write_text(String(dist),3);
+}
 
 void getDistKalmanFilter(int pointsNumber)
 {
@@ -113,16 +128,6 @@ void getDistMovingAverage(){
   write_text(String(current_dist),3);
 }
 
-void exponential_smoothing_with_kalman(){
-  
-  exp_sm_current = exp_sm_alpha*myFilter.getFilteredValue(WiFi.RSSI()) +(1-exp_sm_alpha)*exp_sm_last;
-  exp_sm_last = exp_sm_current;
-  
-  double power =(-40.054-exp_sm_current)/20; 
-  current_dist = pow(10, power);
-  write_text(String(current_dist),2);
-  
-}
 
 void write_text(String txt,int size){
  display.clearDisplay();
@@ -130,7 +135,6 @@ void write_text(String txt,int size){
  display.setTextSize(size);
  display.setTextColor(WHITE);
  display.setCursor(0, 10);
- // Display static text
  display.println(txt);
  display.display(); 
 }
