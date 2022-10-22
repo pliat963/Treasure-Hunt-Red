@@ -23,6 +23,9 @@ By: Plia Trabelsi, Yonatan Reches, Noam Reches
 
 - User Interface.pdf - describes how to use the project
 
+- wifi experiments directory - contains the files and ducumentation of attempts to find a good way to calculate distance using Wifi 
+
+
 
 
 
